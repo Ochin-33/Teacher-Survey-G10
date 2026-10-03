@@ -145,7 +145,17 @@ const studentsData = [
     id: 19,
     name: "Euell P. Dawat",
     image: "img/EUELL.jpg",
-    message: "Happy Birthday"
+    message: `Happy birthday, teacher gelka! 🥳
+
+               thank you for always being so patient with your einstein bebus. thank you kaayo, cher, because even though badlungon jud kaayo mi, #sabaanxhugawan ✌🏻, you still manage to be so patient, kind, understanding, and soft-spoken with us.
+               
+               dili mi mahadlok mag-solve kay you always guide us patiently. gatarungon jud mi nimo ug tudlo, and you always make sure nga masabtan namo ang lessons before moving on. your patience really means so much to us, especially when einstein is being einstein. 😓
+               
+               ayaw’g kabalaka kung gamay jud ko’g scores/grades, cher, kay ako gyud ang problema HAHAHA but kidding aside, i genuinely pray that the lord grants your heart’s desires, gives you a fruitful and fulfilling life, and continues to bless your good heart and your family. may he always guide you, strengthen you, and bless you for all the lives you continue to touch.
+               
+               you honestly don’t know how grateful einstein is to have you. we wouldn’t want to trade you for anyone else. you’re truly one of the best teachers i’ve had so far, and we’re so thankful for everything you do for us.
+               
+               happy birthday again, cher! we love you so much! — from the bottom of jowel’s heart🫰`
   },
   {
     id: 20,
