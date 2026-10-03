@@ -102,8 +102,8 @@ const studentsData = [
   {
     id: 13,
     name: "Olivia Margarette A. Bagnol",
-    image: "img/PLACEHOLDER.jpg",
-    message: "Happy Birthday"
+    image: "img/OLIVIA.jpg",
+    message: "Happy Birthday, Ma'am Gelka, thank you for being such a kind and caring teacher and for always guiding us. I hope you know how much we appreciate all your hard work and patience with us. Wishing you lots of happiness, good health, and more blessings."
   },
   {
     id: 14,
@@ -252,7 +252,9 @@ Once again, happy birthday Teacher Gelka! 🎉`
     id: 30,
     name: "Christine Joy V. Sarita",
     image: "img/TINTIN.jpg",
-    message: "Happy Birthday"
+    message: `Hello teacher Gelka! Thank you so much for your patience and willingness to teach us. Salamat kaayo for encouraging us to join various competitions, cher. Thank you also for not limiting or restricting us from the opportunities that come our way. You are the kind of teacher where students don’t have to worry about answering in front of the whole class because you are always there to guide them. For someone who really isn’t good with numbers (bogek sa math), you are truly the best fit for a student like me, cher. I can really understand your lessons, and you are indeed an amazing teacher because, for the first time in a long time, I was able to understand. If gamay gani ko’g scores cher, ako najud problema ana (but I'm trying, hehe ✌️)
+‎
+‎               You have been so good to us, ma’am. I pray to God that you will live a healthy and happy life. May your spark never disappear, and I hope that you continue to teach, inspire, and encourage more people around you. I was already so content and grateful for my classmates, but having you as our teacher made 10th grade a lot more special`
   },
   {
     id: 31,
