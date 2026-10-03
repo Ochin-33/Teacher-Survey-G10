@@ -1,0 +1,841 @@
+/* ==========================================================================
+   RESET & VARIABLES
+   ========================================================================== */
+:root {
+  --primary-pink: #ff6b8b;
+  --primary-dark: #d81b60;
+  --soft-pink: #ffe6ec;
+  --accent-pink: #ff8fa3;
+  --bg-gradient: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+  --text-color: #4a2e35;
+  --text-muted: #8c6874;
+  --white: #ffffff;
+  --shadow: 0 10px 30px rgba(216, 27, 96, 0.12);
+  --shadow-hover: 0 18px 40px rgba(216, 27, 96, 0.22);
+  --radius: 20px;
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg-gradient);
+  color: var(--text-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background Animated Canvas */
+#heartCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Utility Classes */
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   MATH EQUATION GATE OVERLAY (LOCK SCREEN)
+   ========================================================================== */
+.gate-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 240, 243, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.gate-card {
+  background: var(--white);
+  padding: 40px 30px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  border: 2px solid #ffccd5;
+  animation: popIn 0.4s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.gate-icon {
+  width: 65px;
+  height: 65px;
+  background: var(--soft-pink);
+  color: var(--primary-pink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.8rem;
+}
+
+.gate-card h2 {
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.gate-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 25px;
+}
+
+.equation-box {
+  background: #fff5f7;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  border: 2px dashed var(--accent-pink);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-group input {
+  padding: 14px;
+  border: 2px solid #ffd1dc;
+  border-radius: 12px;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: var(--transition);
+}
+
+.input-group input:focus {
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 4px rgba(255, 107, 139, 0.15);
+}
+
+.input-group button {
+  background: var(--primary-pink);
+  color: var(--white);
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.input-group button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.error-msg {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-top: 12px;
+  min-height: 20px;
+}
+
+/* Shake Animation for Wrong Answer */
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+/* ==========================================================================
+   MAIN WEBSITE CONTENT & NAVBAR
+   ========================================================================== */
+.main-content {
+  position: relative;
+  z-index: 2;
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.nav-heart {
+  color: var(--primary-pink);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Circle Logo on the Right Side */
+.nav-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--primary-pink), var(--accent-pink));
+  box-shadow: 0 4px 10px rgba(255, 107, 139, 0.3);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.nav-logo:hover {
+  transform: rotate(10deg) scale(1.05);
+}
+
+.nav-logo img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   HERO / BANNER
+   ========================================================================== */
+.hero {
+  padding: 50px 20px 30px;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--soft-pink);
+  color: var(--primary-dark);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.hero h1 {
+  font-size: 2.2rem;
+  color: var(--primary-dark);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.hero p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+.search-bar {
+  background: var(--white);
+  padding: 10px 20px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid #ffe0e6;
+}
+
+.search-bar i {
+  color: var(--primary-pink);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+/* ==========================================================================
+   CARDS GRID & CARDS
+   ========================================================================== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 20px 60px;
+}
+
+.grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.grid-header h2 {
+  font-size: 1.4rem;
+  color: var(--primary-dark);
+}
+
+.badge {
+  background: var(--primary-pink);
+  color: var(--white);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.student-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 25px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid yellow;
+  cursor: pointer;
+}
+
+.student-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 15px;
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--soft-pink);
+  box-shadow: 0 4px 12px rgba(255, 107, 139, 0.2);
+}
+
+.card-heart-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--primary-pink);
+  color: var(--white);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  border: 2px solid var(--white);
+}
+
+.student-card h3 {
+  font-size: 1.15rem;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.student-role {
+  font-size: 0.8rem;
+  color: var(--primary-pink);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.card-message {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.read-more-btn {
+  margin-top: auto;
+  color: var(--primary-dark);
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: var(--transition);
+}
+
+.student-card:hover .read-more-btn {
+  gap: 8px;
+  color: var(--primary-pink);
+}
+
+/* ==========================================================================
+   MODAL WINDOW
+   ========================================================================== */
+   .close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: #fef3c7;
+  border: none;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  cursor: pointer;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999; /* Keeps close button on top of everything */
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: var(--primary-pink);
+  color: #ffffff;
+  transform: scale(1.1);
+}
+.modal-header img {
+  width: 100px;   /* Increased from 60px/75px to 100px */
+  height: 100px;  /* Keep width and height equal */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary-pink); /* Slightly thicker border */
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  padding: 20px;
+}
+
+.modal-card {
+  background: var(--white);
+  width: 92%;
+  max-width: 680px;
+  
+  /* CRITICAL FOR SCROLLING: limit total height so it fits on screen */
+  max-height: 85vh; 
+  display: flex;
+  flex-direction: column;
+  
+  border-radius: var(--radius);
+  padding: 30px 25px;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  animation: modalUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+  flex-shrink: 0; /* Prevents header from shrinking when message is long */
+}
+
+.modal-header img {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-pink);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.modal-header h3 {
+  font-size: 1.4rem;
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+/* ENABLE SMOOTH SCROLLING HERE */
+.modal-body {
+  background: #fffbeb;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid #fef3c7;
+  
+  /* CRITICAL SCROLLING PROPERTIES */
+  overflow-y: auto;          /* Enables vertical scrollbar when message overflows */
+  max-height: 55vh;          /* Sets scrollable area boundary */
+  -webkit-overflow-scrolling: touch; /* Ensures smooth touch scrolling on iPhones/iPads */
+}
+
+/* Custom Sunflower-themed Scrollbar (Optional) */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #fef3c7;
+  border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #f59e0b;
+  border-radius: 10px;
+}
+
+.modal-body p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-color);
+  font-style: italic;
+  white-space: pre-line; /* Preserves space & line breaks in long messages */
+  margin: 0;
+}
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+footer {
+  text-align: center;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+footer i {
+  color: var(--primary-pink);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (PHONE OPTIMIZATIONS)
+   ========================================================================== */
+@media (max-width: 600px) {
+  .nav-brand span {
+    font-size: 1.05rem;
+  }
+
+  .nav-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .hero p {
+    font-size: 0.9rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gate-card {
+    padding: 30px 20px;
+  }
+
+  .input-group button {
+    padding: 12px;
+  }
+}
+
+.music-btn {
+  background: var(--soft-pink);
+  border: 2px solid var(--primary-pink);
+  color: var(--primary-dark);
+  padding: 8px 14px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: var(--transition);
+}
+
+.music-btn:hover {
+  background: var(--accent-pink);
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   3D ROTATING PHOTO CAKE STYLING
+   ========================================================================== */
+.cake-section {
+  text-align: center;
+  padding: 40px 20px;
+  perspective: 1000px; /* Essential for 3D depth perception */
+}
+
+.cake-container {
+  width: 280px;
+  height: 280px;
+  margin: 50px auto 30px;
+  position: relative;
+}
+
+.cake-3d {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  animation: spinCake 16s linear infinite;
+}
+
+/* Pause spinning on mouse hover so photos can be viewed clearly */
+.cake-3d:hover {
+  animation-play-state: paused;
+}
+
+/* 3D Spin Keyframes */
+@keyframes spinCake {
+  from {
+    transform: rotateX(-12deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(-12deg) rotateY(360deg);
+  }
+}
+
+/* Cake Top Lid */
+.cake-top {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, #fef3c7 0%, #fde68a 70%, #f59e0b 100%);
+  border-radius: 50%;
+  top: 30px;
+  left: 30px;
+  transform: rotateX(90deg) translateZ(60px);
+  box-shadow: inset 0 0 15px rgba(120, 53, 15, 0.2);
+}
+
+/* Candle & Flame */
+.candle {
+  position: absolute;
+  width: 14px;
+  height: 45px;
+  background: repeating-linear-gradient(45deg, #f43f5e, #f43f5e 8px, #ffffff 8px, #ffffff 16px);
+  top: -10px;
+  left: 133px;
+  transform: translateZ(60px);
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.flame {
+  position: absolute;
+  top: -15px;
+  left: 2px;
+  width: 10px;
+  height: 15px;
+  background: #f59e0b;
+  border-radius: 50% 50% 20% 20%;
+  box-shadow: 0 0 10px #f59e0b, 0 0 20px #ef4444;
+  animation: flicker 0.4s infinite alternate;
+}
+
+@keyframes flicker {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+/* ==========================================================================
+   INTERACTIVE BLOW-OUT CAKE STYLING
+   ========================================================================== */
+.interactive-cake-section {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.cake-wrapper {
+  width: 220px;
+  height: 200px;
+  margin: 40px auto 20px;
+  position: relative;
+}
+
+.cake-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cake-base {
+  width: 200px;
+  height: 100px;
+  background: linear-gradient(to right, #fde68a, #f59e0b);
+  border-radius: 15px 15px 10px 10px;
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.cake-frosting {
+  width: 210px;
+  height: 35px;
+  background: #fff8f0;
+  border-radius: 20px;
+  position: absolute;
+  bottom: 85px;
+  left: 5px;
+  border-bottom: 4px solid #fbcfe8;
+}
+
+.interactive-candle {
+  width: 16px;
+  height: 60px;
+  background: repeating-linear-gradient(45deg, #f43f5e, #f43f5e 10px, #ffffff 10px, #ffffff 20px);
+  position: absolute;
+  bottom: 120px;
+  left: 102px;
+  border-radius: 4px;
+}
+
+.interactive-flame {
+  width: 18px;
+  height: 26px;
+  background: radial-gradient(circle at 50% 30%, #fef08a, #f59e0b 60%, #ef4444 100%);
+  border-radius: 50% 50% 20% 20%;
+  position: absolute;
+  top: -24px;
+  left: -1px;
+  box-shadow: 0 0 15px #f59e0b, 0 0 30px #ef4444;
+  animation: flameFlicker 0.15s infinite alternate;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.interactive-flame.out {
+  opacity: 0;
+  transform: scale(0);
+}
+
+@keyframes flameFlicker {
+  0% { transform: scale(1) rotate(-2deg); }
+  100% { transform: scale(1.1) rotate(2deg); }
+}
+
+/* Smoke rising when candle is blown out */
+.smoke {
+  position: absolute;
+  top: -30px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  background: rgba(150, 150, 150, 0.6);
+  border-radius: 50%;
+  filter: blur(4px);
+}
+
+.smoke.active {
+  animation: riseSmoke 2s forwards;
+}
+
+@keyframes riseSmoke {
+  0% { opacity: 0.8; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-50px) scale(3); }
+}
+
+.cake-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.mic-btn, .fallback-btn {
+  background: var(--soft-pink);
+  border: 2px solid var(--primary-pink);
+  color: var(--primary-dark);
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mic-btn:hover, .fallback-btn:hover {
+  background: var(--accent-pink);
+  transform: scale(1.04);
+}
+
+.mic-status {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #d97706;
+  font-weight: 600;
+}
