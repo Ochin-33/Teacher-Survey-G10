@@ -205,7 +205,7 @@ Happy Birthday, Cher! I just want to say thank you for being such an amazing adv
     id: 26,
     name: "Princess Janelle P. Mulato",
     image: "img/MULATO.jpg",
-    message: "Happy Teacher’s Day, cher Gelka! Thank you for your patience, effort, and dedication in teaching us Math. You don’t just teach us how to solve problems and equations, but you also remind us to be patient, think carefully, and never give up when things get difficult. We truly appreciate all the time and effort you put into helping us learn. Thank you for being a wonderful teacher. Happy Teacher’s Day!"
+    message: "Happy Birthday, Cher Gelka!  Wishing you a wonderful birthday filled with happiness, good health, and many blessings. Thank you for your patience, kindness, and dedication in teaching us, especially in Mathematics. May you continue to inspire many students and achieve all the things you wish for. Enjoy your special day, and once again, Happy Birthday Cher!"
   },
   {
     id: 27,
