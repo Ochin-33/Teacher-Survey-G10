@@ -167,7 +167,7 @@ const studentsData = [
     id: 21,
     name: "Alliyah Mae P. Dupalco",
     image: "img/ALLIYAH.jpg",
-    message: `Hello Teacher Gelka! Belated happy birthday and happy teacher's day, Teacher Gelka! 💗🥹
+    message: `Hello Teacher Gelka! Happy birthday and happy teacher's day, Teacher Gelka! 💗🥹
 
              Teacher thank youu for always disciplining us with care and for helping us sa pam panglimpyo sa room sa pag guide tser hehe. Thank you for being a second parent sa amoa and for always being there whenever we need your help. Thank youu because you help us many times already na teacher and sabay ka sa amoa. We are truly sorry for the times nga saba mi and badlungon sa imoha teacher, sa mga times na in-ana kay you still choose to be patient with us tser. Thank you for always reminding us kung unsay tama tser and sa pag care pud sa amoa teacher.
 
